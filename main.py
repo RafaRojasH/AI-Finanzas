@@ -5,7 +5,7 @@ from datetime import datetime
 
 st.title('AI & Finanzas')
 """
-# MSI
+# Consultar Stock en un intervalo de tiempo
 """
 indice = 'Dow Jones Industrial Average'
 pais = 'united states'
