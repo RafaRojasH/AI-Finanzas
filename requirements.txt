@@ -1,3 +1,2 @@
 investpy==1.0.7
-pandas @ file:///opt/concourse/worker/volumes/live/f14cf8c4-c564-4eff-4b17-158e90dbf88a/volume/pandas_1602088128240/work
 streamlit==1.2.0
