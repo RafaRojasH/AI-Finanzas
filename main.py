@@ -51,3 +51,17 @@ if st.button('Consultar'):
     del (df['Currency'])
     st.write(df)
     st.line_chart(df)
+
+    aux_inicio = fecha_inicio.replace('/', '_')
+    aux_fin = fecha_fin.replace('/', '_')
+    nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
+
+    @st.cache
+    def convert_df(df):
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(df)
+    st.download_button(label="Descargar en CSV",
+                       data=csv,
+                       file_name=nombre_consulta,
+                       mime='text/csv')
