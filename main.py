@@ -2,11 +2,15 @@ import pandas as pd
 import streamlit as st
 import investpy
 from datetime import datetime
+from traceback import format_exc
+import numpy as np
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
 
 st.title('AI & Finanzas')
-"""
-# Consultar Stock en un intervalo de tiempo
-"""
+st.subheader('Consultar Stock en un intervalo de tiempo')
 indice = 'Dow Jones Industrial Average'
 pais = 'united states'
 stock_name = '3M'
@@ -16,52 +20,101 @@ fecha_fin = '02/11/2021'
 
 indices_principales = pd.read_csv('Major World Market Indices.csv')
 df_indices_principales = pd.DataFrame(indices_principales)
-indice = st.selectbox('Elige un Índice', list(df_indices_principales.loc[:, 'Index']))
+indice = st.sidebar.selectbox('Elige un Índice', list(df_indices_principales.loc[:, 'Index']))
 for i in df_indices_principales.index:
     if df_indices_principales['Index'][i] == indice:
-        pais = df_indices_principales['Country'][i]
+        try:
+            pais = df_indices_principales['Country'][i]
+            aux = indice.find('/')
+            if aux != -1:
+                indice = indice.replace('/', '_')
+            archivo = indice + '.csv'
+            arch_indice = pd.read_csv(archivo)
+            df_arch_indice = pd.DataFrame(arch_indice)
+            if len(df_arch_indice.index) > 1:
+                stock_name = st.sidebar.selectbox('Elige un Stock', list(df_arch_indice.loc[:, 'Name']))
+                stocks = pd.read_csv('stock_symbol_country.csv')
+                df_stocks = pd.DataFrame(stocks)
+                for df_i in df_stocks.index:
+                    if df_stocks['name'][df_i] == stock_name:
+                        stock_symbol = df_stocks['symbol'][df_i]
+                fecha_inicio = st.sidebar.date_input("Fecha inicial", datetime.now())
+                fecha_fin = st.sidebar.date_input("Fecha final", datetime.now())
 
-        aux = indice.find('/')
-        if aux != -1:
-            indice = indice.replace('/', '_')
-        archivo = indice + '.csv'
-        arch_indice = pd.read_csv(archivo)
-        df_arch_indice = pd.DataFrame(arch_indice)
-        stock_name = st.selectbox('Elige un Stock', list(df_arch_indice.loc[:, 'Name']))
+                fecha_inicio = fecha_inicio.strftime('%d/%m/%Y')
+                fecha_fin = fecha_fin.strftime('%d/%m/%Y')
 
-        stocks = pd.read_csv('stock_symbol_country.csv')
-        df_stocks = pd.DataFrame(stocks)
-        for i in df_stocks.index:
-            if df_stocks['name'][i] == stock_name:
-                stock_symbol = df_stocks['symbol'][i]
+                if st.sidebar.button('Consultar'):
+                    try:
+                        consulta = investpy.get_stock_historical_data(stock=stock_symbol,
+                                                                      country=pais,
+                                                                      from_date=fecha_inicio,
+                                                                      to_date=fecha_fin)
+                        df = pd.DataFrame(consulta)
+                        del (df['Currency'])
+                        st.subheader('Datos del Stock ' + stock_name)
+                        st.write(df)
+                        st.subheader('Gráfica de datos Stock ' + stock_name)
+                        st.line_chart(df['Close'])
 
+                        aux_inicio = fecha_inicio.replace('/', '_')
+                        aux_fin = fecha_fin.replace('/', '_')
+                        nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
+                        @st.cache
+                        def convert_df(df):
+                            return df.to_csv().encode('utf-8')
 
-fecha_inicio = st.date_input("Fecha inicial", datetime.now())
-fecha_fin = st.date_input("Fecha final", datetime.now())
+                        csv = convert_df(df)
+                        st.download_button(label="Descargar en CSV",
+                                           data=csv,
+                                           file_name=nombre_consulta,
+                                           mime='text/csv')
 
-fecha_inicio = fecha_inicio.strftime('%d/%m/%Y')
-fecha_fin = fecha_fin.strftime('%d/%m/%Y')
+                    except ValueError:
+                        exc = format_exc()
+                        st.text_input('Error', exc)
 
-if st.button('Consultar'):
-    busca6 = investpy.get_stock_historical_data(stock=stock_symbol,
-                                                country=pais,
-                                                from_date=fecha_inicio,
-                                                to_date=fecha_fin)
-    df = pd.DataFrame(busca6)
-    del (df['Currency'])
-    st.write(df)
-    st.line_chart(df)
+                if st.sidebar.button('Todo el Índice'):
+                    stocks = pd.read_csv('stock_symbol_country.csv')
+                    df_stocks = pd.DataFrame(stocks)
+                    stocks_indice = df_stocks.loc[df_stocks['indice'] == indice]
+                    dataframes = []
+                    for st_i in stocks_indice.index:
+                        try:
+                            consulta = investpy.get_stock_historical_data(stock=stocks_indice['symbol'][st_i],
+                                                                          country=pais,
+                                                                          from_date=fecha_inicio,
+                                                                          to_date=fecha_fin)
 
-    aux_inicio = fecha_inicio.replace('/', '_')
-    aux_fin = fecha_fin.replace('/', '_')
-    nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
+                            consulta['Stock'] = stocks_indice['name'][st_i]
+                            consulta['Symbol'] = stocks_indice['symbol'][st_i]
+                            dataframes.append(consulta)
 
-    @st.cache
-    def convert_df(df):
-        return df.to_csv().encode('utf-8')
+                        except:
+                            st.text_input('Error', stocks_indice['symbol'][st_i])
 
-    csv = convert_df(df)
-    st.download_button(label="Descargar en CSV",
-                       data=csv,
-                       file_name=nombre_consulta,
-                       mime='text/csv')
+                    todos = pd.concat(dataframes, axis=0)
+                    df = pd.DataFrame(todos)
+
+                    del (df['Currency'])
+                    st.write(df)
+
+                    aux_inicio = fecha_inicio.replace('/', '_')
+                    aux_fin = fecha_fin.replace('/', '_')
+                    nombre_consulta = indice + '_' + aux_inicio + '_' + aux_fin + '.csv'
+
+                    @st.cache
+                    def convert_df(df):
+                        return df.to_csv().encode('utf-8')
+
+                    csv = convert_df(df)
+                    st.download_button(label="Descargar en CSV",
+                                       data=csv,
+                                       file_name=nombre_consulta,
+                                       mime='text/csv')
+            else:
+                st.sidebar.text_input('Error', 'El índice no tiene stocks')
+
+        except ValueError:
+            exc = format_exc()
+            st.sidebar.text_input('Error', exc)
