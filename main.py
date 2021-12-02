@@ -4,9 +4,7 @@ import investpy
 from datetime import datetime
 from traceback import format_exc
 import numpy as np
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+
 
 
 st.title('AI & Finanzas')
