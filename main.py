@@ -4,7 +4,11 @@ import investpy
 from datetime import datetime
 from traceback import format_exc
 import numpy as np
-
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
 
 
 st.title('AI & Finanzas')
