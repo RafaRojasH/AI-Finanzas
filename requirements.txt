@@ -1,2 +1,2 @@
-investpy==1.0.75
+investpy==1.0.7
 streamlit==1.2.0
