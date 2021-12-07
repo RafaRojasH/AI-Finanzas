@@ -70,7 +70,18 @@ for i in df_indices_principales.index:
                                            data=csv,
                                            file_name=nombre_consulta,
                                            mime='text/csv')
-
+                        modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
+                        modelo = st.sidebar.selectbox('Elige un modelo', modelos)
+                        if modelo == 'LSTM':
+                            def create_dataset(dataset, look_back=1):
+                                dataX, dataY = [], []
+                                for i in range(len(dataset) - look_back - 1):
+                                    a = dataset[i:(i + look_back), 0]
+                                    dataX.append(a)
+                                    dataY.append(dataset[i + look_back, 0])
+                                return np.array(dataX), np.array(dataY)
+                            dataset = df.iloc[:, 1:2].values
+                        
                     except ValueError:
                         exc = format_exc()
                         st.text_input('Error', exc)
@@ -113,17 +124,7 @@ for i in df_indices_principales.index:
                                        data=csv,
                                        file_name=nombre_consulta,
                                        mime='text/csv')
-                modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
-                modelo = st.sidebar.selectbox('Elige un modelo', modelos)
-                if modelo == 'LSTM':
-                    def create_dataset(dataset, look_back=1):
-                        dataX, dataY = [], []
-                        for i in range(len(dataset) - look_back - 1):
-                            a = dataset[i:(i + look_back), 0]
-                            dataX.append(a)
-                            dataY.append(dataset[i + look_back, 0])
-                        return np.array(dataX), np.array(dataY)
-                    dataset = df.iloc[:, 1:2].values
+                
 
 
             else:
