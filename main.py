@@ -119,3 +119,5 @@ for i in df_indices_principales.index:
         except ValueError:
             exc = format_exc()
             st.sidebar.text_input('Error', exc)
+if st.sidebar.button('LSTM'):
+    st.text_input('LSTM', 'lstm')
