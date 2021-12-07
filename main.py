@@ -73,7 +73,6 @@ for i in df_indices_principales.index:
                         modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
                         modelo = st.sidebar.selectbox('Elige un modelo', modelos)
                         if modelo == 'LSTM':
-                            st.line_chart(df['Close'])
                             def create_dataset(dataset, look_back=1):
                                 dataX, dataY = [], []
                                 for i in range(len(dataset) - look_back - 1):
@@ -89,20 +88,31 @@ for i in df_indices_principales.index:
                             train_size = int(len(dataset) * (porcent_train / 100))
                             test_size = len(dataset) - train_size
                             train, test = dataset[0:train_size, :], dataset[train_size:len(dataset), :]
+                            # reshape into X=t and Y=t+1
                             look_back = 1
                             trainX, trainY = create_dataset(train, look_back)
                             testX, testY = create_dataset(test, look_back)
+                            # reshape input to be [samples, time steps, features]
                             trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
                             testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-                            st.sidebar.write('1')
-                            model = Sequential()
-                            model.add(LSTM(40, input_shape=(1, 1, 1), return_sequences=True))
-                            model.add(Dense(1))
-                            model.compile(loss='mean_squared_error', optimizer='adam')
+                            # create and fit the LSTM network
+                            tf.keras.backend.clear_session()
+                            model = tf.keras.models.Sequential([
+                                tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
+                                                       input_shape=[None]),
+                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True)),
+                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True)),
+                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32)),
+                                tf.keras.layers.Dense(1),
+                                tf.keras.layers.Lambda(lambda x: x * 100.0)
+                            ])
+                            model.compile(loss="mae", optimizer=tf.keras.optimizers.SGD(lr=1e-6, momentum=0.9))
+
                             model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
-                            st.sidebar.write('2')
+                            # make predictions
                             trainPredict = model.predict(trainX)
                             testPredict = model.predict(testX)
+                            # invert predictions
                             trainPredict = scaler.inverse_transform(trainPredict)
                             trainY = scaler.inverse_transform([trainY])
                             testPredict = scaler.inverse_transform(testPredict)
@@ -113,7 +123,44 @@ for i in df_indices_principales.index:
                         exc = format_exc()
                         st.text_input('Error', exc)
 
-               
+                if st.sidebar.button('Todo el Índice'):
+                    stocks = pd.read_csv('stock_symbol_country.csv')
+                    df_stocks = pd.DataFrame(stocks)
+                    stocks_indice = df_stocks.loc[df_stocks['indice'] == indice]
+                    dataframes = []
+                    for st_i in stocks_indice.index:
+                        try:
+                            consulta = investpy.get_stock_historical_data(stock=stocks_indice['symbol'][st_i],
+                                                                          country=pais,
+                                                                          from_date=fecha_inicio,
+                                                                          to_date=fecha_fin)
+
+                            consulta['Stock'] = stocks_indice['name'][st_i]
+                            consulta['Symbol'] = stocks_indice['symbol'][st_i]
+                            dataframes.append(consulta)
+
+                        except:
+                            st.text_input('Error', stocks_indice['symbol'][st_i])
+
+                    todos = pd.concat(dataframes, axis=0)
+                    df = pd.DataFrame(todos)
+
+                    del (df['Currency'])
+                    st.write(df)
+
+                    aux_inicio = fecha_inicio.replace('/', '_')
+                    aux_fin = fecha_fin.replace('/', '_')
+                    nombre_consulta = indice + '_' + aux_inicio + '_' + aux_fin + '.csv'
+
+                    @st.cache
+                    def convert_df(df):
+                        return df.to_csv().encode('utf-8')
+
+                    csv = convert_df(df)
+                    st.download_button(label="Descargar en CSV",
+                                       data=csv,
+                                       file_name=nombre_consulta,
+                                       mime='text/csv')
             else:
                 st.sidebar.text_input('Error', 'El índice no tiene stocks')
 
