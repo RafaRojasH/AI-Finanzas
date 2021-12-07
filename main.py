@@ -96,17 +96,17 @@ for i in df_indices_principales.index:
                             trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
                             testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
                             # create and fit the LSTM network
-                            tf.keras.backend.clear_session()
-                            model = tf.keras.models.Sequential([
-                                tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1),
+                            tensorflow.keras.backend.clear_session()
+                            model = tensorflow.keras.models.Sequential([
+                                tensorflow.keras.layers.Lambda(lambda x: tensorflow.expand_dims(x, axis=-1),
                                                        input_shape=[None]),
-                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True)),
-                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences=True)),
-                                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32)),
-                                tf.keras.layers.Dense(1),
-                                tf.keras.layers.Lambda(lambda x: x * 100.0)
+                                tensorflow.keras.layers.Bidirectional(tensorflow.keras.layers.LSTM(32, return_sequences=True)),
+                                tensorflow.keras.layers.Bidirectional(tensorflow.keras.layers.LSTM(32, return_sequences=True)),
+                                tensorflow.keras.layers.Bidirectional(tensorflow.keras.layers.LSTM(32)),
+                                tensorflow.keras.layers.Dense(1),
+                                tensorflow.keras.layers.Lambda(lambda x: x * 100.0)
                             ])
-                            model.compile(loss="mae", optimizer=tf.keras.optimizers.SGD(lr=1e-6, momentum=0.9))
+                            model.compile(loss="mae", optimizer=tensorflow.keras.optimizers.SGD(lr=1e-6, momentum=0.9))
 
                             model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
                             # make predictions
