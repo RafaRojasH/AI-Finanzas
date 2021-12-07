@@ -112,44 +112,7 @@ for i in df_indices_principales.index:
                         exc = format_exc()
                         st.text_input('Error', exc)
 
-                if st.sidebar.button('Todo el Índice'):
-                    stocks = pd.read_csv('stock_symbol_country.csv')
-                    df_stocks = pd.DataFrame(stocks)
-                    stocks_indice = df_stocks.loc[df_stocks['indice'] == indice]
-                    dataframes = []
-                    for st_i in stocks_indice.index:
-                        try:
-                            consulta = investpy.get_stock_historical_data(stock=stocks_indice['symbol'][st_i],
-                                                                          country=pais,
-                                                                          from_date=fecha_inicio,
-                                                                          to_date=fecha_fin)
-
-                            consulta['Stock'] = stocks_indice['name'][st_i]
-                            consulta['Symbol'] = stocks_indice['symbol'][st_i]
-                            dataframes.append(consulta)
-
-                        except:
-                            st.text_input('Error', stocks_indice['symbol'][st_i])
-
-                    todos = pd.concat(dataframes, axis=0)
-                    df = pd.DataFrame(todos)
-
-                    del (df['Currency'])
-                    st.write(df)
-
-                    aux_inicio = fecha_inicio.replace('/', '_')
-                    aux_fin = fecha_fin.replace('/', '_')
-                    nombre_consulta = indice + '_' + aux_inicio + '_' + aux_fin + '.csv'
-
-                    @st.cache
-                    def convert_df(df):
-                        return df.to_csv().encode('utf-8')
-
-                    csv = convert_df(df)
-                    st.download_button(label="Descargar en CSV",
-                                       data=csv,
-                                       file_name=nombre_consulta,
-                                       mime='text/csv')
+               
             else:
                 st.sidebar.text_input('Error', 'El índice no tiene stocks')
 
