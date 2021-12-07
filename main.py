@@ -120,6 +120,6 @@ for i in df_indices_principales.index:
             exc = format_exc()
             st.sidebar.text_input('Error', exc)
 modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
-modelo = st.sidebar.selectbox('Elige un modelo', )
+modelo = st.sidebar.selectbox('Elige un modelo', modelos)
 if modelo == 'LSTM':
     st.text_input('LSTM', 'modelo lstm')
