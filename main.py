@@ -119,5 +119,7 @@ for i in df_indices_principales.index:
         except ValueError:
             exc = format_exc()
             st.sidebar.text_input('Error', exc)
-if st.sidebar.button('LSTM'):
-    st.text_input('LSTM', 'lstm')
+modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
+modelo = st.sidebar.selectbox('Elige un modelo', )
+if modelo == 'LSTM':
+    st.text_input('LSTM', 'modelo lstm')
