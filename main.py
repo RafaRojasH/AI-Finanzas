@@ -97,7 +97,7 @@ for i in df_indices_principales.index:
                             trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
                             testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
                             # create and fit the LSTM network
-                            tensorflow.keras.backend.clear_session()
+                            # tensorflow.keras.backend.clear_session()
                             model = tensorflow.keras.models.Sequential([
                                 tensorflow.keras.layers.Lambda(lambda x: tensorflow.expand_dims(x, axis=-1),
                                                        input_shape=[None]),
