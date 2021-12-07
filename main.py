@@ -122,9 +122,9 @@ for i in df_indices_principales.index:
 modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
 modelo = st.sidebar.selectbox('Elige un modelo', modelos)
 if modelo == 'LSTM':
-    st.sidebar.text_input('LSTM', 'modelo lstm')
-    dataset = df.iloc[:, 1:2].values
-    dataset = dataset.astype('float32')
+	st.sidebar.text_input('LSTM', 'modelo lstm')
+	dataset = df.iloc[:, 1:2].values
+	dataset = dataset.astype('float32')
 	scaler = MinMaxScaler(feature_range=(0, 1))
 	dataset = scaler.fit_transform(dataset)
 	train_size = int(len(dataset) * (porcent_train / 100))
