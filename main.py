@@ -88,23 +88,20 @@ for i in df_indices_principales.index:
                             train_size = int(len(dataset) * (porcent_train / 100))
                             test_size = len(dataset) - train_size
                             train, test = dataset[0:train_size, :], dataset[train_size:len(dataset), :]
-                            # reshape into X=t and Y=t+1
                             look_back = 1
                             trainX, trainY = create_dataset(train, look_back)
                             testX, testY = create_dataset(test, look_back)
-                            # reshape input to be [samples, time steps, features]
                             trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
                             testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-                            # create and fit the LSTM network
+                            st.sidebar.write('1')
                             model = Sequential()
                             model.add(LSTM(4, input_shape=(1, look_back)))
                             model.add(Dense(1))
                             model.compile(loss='mean_squared_error', optimizer='adam')
                             model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
-                            # make predictions
+                            st.sidebar.write('2')
                             trainPredict = model.predict(trainX)
                             testPredict = model.predict(testX)
-                            # invert predictions
                             trainPredict = scaler.inverse_transform(trainPredict)
                             trainY = scaler.inverse_transform([trainY])
                             testPredict = scaler.inverse_transform(testPredict)
