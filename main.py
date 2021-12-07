@@ -73,6 +73,7 @@ for i in df_indices_principales.index:
                         modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
                         modelo = st.sidebar.selectbox('Elige un modelo', modelos)
                         if modelo == 'LSTM':
+                            st.line_chart(df['Close'])
                             def create_dataset(dataset, look_back=1):
                                 dataX, dataY = [], []
                                 for i in range(len(dataset) - look_back - 1):
