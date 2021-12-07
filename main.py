@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
-from tensorflow.keras.backend import clear_sessi
+from tensorflow.keras.backend import clear_session
 
 st.title('AI & Finanzas')
 st.subheader('Consultar Stock en un intervalo de tiempo')
