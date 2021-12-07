@@ -92,8 +92,8 @@ for i in df_indices_principales.index:
                             look_back = 1
                             trainX, trainY = create_dataset(train, look_back)
                             testX, testY = create_dataset(test, look_back)
-                            trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-                            testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+                            trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+                            testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
                             st.sidebar.write('1')
                             model = Sequential()
                             model.add(LSTM(4, input_shape=(1, look_back)))
