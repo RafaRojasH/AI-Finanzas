@@ -4,7 +4,6 @@ import investpy
 from datetime import datetime
 from traceback import format_exc
 import numpy as np
-import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
