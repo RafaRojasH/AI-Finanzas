@@ -113,15 +113,11 @@ for i in df_indices_principales.index:
                                        data=csv,
                                        file_name=nombre_consulta,
                                        mime='text/csv')
-		    modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
-		    modelo = st.sidebar.selectbox('Elige un modelo', modelos)
-		
+                modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
+                modelo = st.sidebar.selectbox('Elige un modelo', modelos)
             else:
                 st.sidebar.text_input('Error', 'El índice no tiene stocks')
 
         except ValueError:
             exc = format_exc()
             st.sidebar.text_input('Error', exc)
-
-
-	
