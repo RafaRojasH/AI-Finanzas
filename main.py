@@ -10,7 +10,7 @@ from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from tensorflow.keras.backend import clear_session
-from lstmAIF import LongShortTM
+# from lstmAIF import LongShortTM
 
 st.title('AI & Finanzas')
 st.subheader('Consultar Stock en un intervalo de tiempo')
@@ -74,8 +74,8 @@ for i in df_indices_principales.index:
                                            mime='text/csv')
                         modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
                         modelo = st.sidebar.selectbox('Elige un modelo', modelos)
-                        if modelo == 'LSTM':
-                            LongShortTM(df)
+                        #if modelo == 'LSTM':
+                         #   LongShortTM(df)
                             
 
                     except ValueError:
