@@ -4,13 +4,9 @@ import investpy
 from datetime import datetime
 from traceback import format_exc
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from tensorflow.keras.backend import clear_session
-# from lstmAIF import LongShortTM
+
+
+
 
 st.title('AI & Finanzas')
 st.subheader('Consultar Stock en un intervalo de tiempo')
@@ -72,11 +68,6 @@ for i in df_indices_principales.index:
                                            data=csv,
                                            file_name=nombre_consulta,
                                            mime='text/csv')
-                        modelos = ['LSTM', 'opc1', 'opc2', 'opc3']
-                        modelo = st.sidebar.selectbox('Elige un modelo', modelos)
-                        #if modelo == 'LSTM':
-                         #   LongShortTM(df)
-                            
 
                     except ValueError:
                         exc = format_exc()
@@ -126,3 +117,5 @@ for i in df_indices_principales.index:
         except ValueError:
             exc = format_exc()
             st.sidebar.text_input('Error', exc)
+
+
