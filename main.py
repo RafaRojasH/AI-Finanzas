@@ -116,10 +116,12 @@ for i in df_indices_principales.index:
                 
             if st.sidebar.button('Consultar solo índice'):
                     try:
-                        consulta = investpy.get_stock_historical_data(index=indice,
-                                                                      country=pais,
-                                                                      from_date=fecha_inicio,
-                                                                      to_date=fecha_fin)
+                        #consulta = investpy.get_stock_historical_data(index=indice,
+                         #                                             country=pais,
+                          #                                            from_date=fecha_inicio,
+                           #                                           to_date=fecha_fin)
+                            
+                        consulta = investpy.get_stock_historical_data(index='ibex 35', country='spain', from_date='01/01/2018', to_date='01/01/2019')
                         df = pd.DataFrame(consulta)
                         del (df['Currency'])
                         st.subheader('Datos del Índice ' + stock_name)
