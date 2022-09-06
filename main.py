@@ -113,6 +113,37 @@ for i in df_indices_principales.index:
                                        mime='text/csv')
             else:
                 st.sidebar.text_input('Error', 'El índice no tiene stocks')
+                
+            if st.sidebar.button('Consultar solo índice'):
+                    try:
+                        consulta = investpy.get_stock_historical_data(index=indice,
+                                                                      country=pais,
+                                                                      from_date=fecha_inicio,
+                                                                      to_date=fecha_fin)
+                        df = pd.DataFrame(consulta)
+                        del (df['Currency'])
+                        st.subheader('Datos del Índice ' + stock_name)
+                        st.write(df)
+                        st.subheader('Gráfica de datos Índice ' + stock_name)
+                        st.line_chart(df['Close'])
+
+                        aux_inicio = fecha_inicio.replace('/', '_')
+                        aux_fin = fecha_fin.replace('/', '_')
+                        nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
+                        @st.cache
+                        def convert_df(df):
+                            return df.to_csv().encode('utf-8')
+
+                        csv = convert_df(df)
+                        st.download_button(label="Descargar en CSV",
+                                           data=csv,
+                                           file_name=nombre_consulta,
+                                           mime='text/csv')
+
+                    except ValueError:
+                        exc = format_exc()
+                        st.text_input('Error', exc)
+
 
         except ValueError:
             exc = format_exc()
