@@ -47,7 +47,7 @@ for i in df_indices_principales.index:
                     try:
                         consulta = investpy.get_stock_historical_data(stock=stock_symbol,
                                                                       country=pais,
-                                                                      from_date=01/01/2000,
+                                                                      from_date='01/01/2000',
                                                                       to_date='31/08/2022')
                         df = pd.DataFrame(consulta)
                         del (df['Currency'])
