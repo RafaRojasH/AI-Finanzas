@@ -87,8 +87,8 @@ for i in df_indices_principales.index:
                         try:
                             consulta = investpy.get_stock_historical_data(stock=stocks_symbol,
                                                                           country=pais,
-                                                                          from_date=fecha_inicio,
-                                                                          to_date=fecha_fin)
+                                                                          from_date='01/01/2000',
+                                                                          to_date='31/08/2022')
 
                             consulta['Stock'] = stocks_indice['name'][st_i]
                             consulta['Symbol'] = stocks_indice['symbol'][st_i]
