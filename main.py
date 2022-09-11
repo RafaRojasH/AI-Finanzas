@@ -75,12 +75,17 @@ for i in df_indices_principales.index:
 
                 if st.sidebar.button('Todo el Índice'):
                     stocks = pd.read_csv('stock_symbol_country.csv')
-                    df_stocks = pd.DataFrame(stocks)
+                    df_stocks = pd.read_csv(indice + '.csv')#DataFrame(stocks)
+                    df_stocks = pd.DataFrame(arch_indice)
                     stocks_indice = df_stocks.loc[df_stocks['indice'] == indice]
                     dataframes = []
-                    for st_i in stocks_indice.index:
+                    for st_i in df_stocks.index:
+                        for i_symbol in df_stocks.index:
+                            if stock_name == df_stocks['name'][i_symbol] and pais == df_stocks['country'][i_symbol] and indice == df_stocks['indice'][i_symbol]:
+                                stock_symbol = df_stocks['symbol'][i_symbol]
+                         
                         try:
-                            consulta = investpy.get_stock_historical_data(stock=stocks_indice['symbol'][st_i],
+                            consulta = investpy.get_stock_historical_data(stock=stocks_symbol,
                                                                           country=pais,
                                                                           from_date=fecha_inicio,
                                                                           to_date=fecha_fin)
