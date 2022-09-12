@@ -59,7 +59,7 @@ for i in df_indices_principales.index:
                         aux_inicio = fecha_inicio.replace('/', '_')
                         aux_fin = fecha_fin.replace('/', '_')
                         #nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
-                        nombre_consulta = stock_symbol + '_' + '01_01_2000' + '_' + '31_08_2022' + '.csv'
+                        nombre_consulta = stock_name + '_' + stock_symbol + '_' + '01_01_2000' + '_' + '31_08_2022' + '.csv'
                         @st.cache
                         def convert_df(df):
                             return df.to_csv().encode('utf-8')
@@ -137,7 +137,7 @@ for i in df_indices_principales.index:
                         aux_inicio = fecha_inicio.replace('/', '_')
                         aux_fin = fecha_fin.replace('/', '_')
                         #nombre_consulta = stock_symbol + '_' + aux_inicio + '_' + aux_fin + '.csv'
-                        nombre_consulta = stock_symbol + '_' + '01_01_2000' + '_' + '31_08_2022' + '.csv'
+                        nombre_consulta = stock_name + '_' + stock_symbol + '_' + '01_01_2000' + '_' + '31_08_2022' + '.csv'
                         @st.cache
                         def convert_df(df):
                             return df.to_csv().encode('utf-8')
