@@ -46,7 +46,7 @@ for i in df_indices_principales.index:
                 if st.sidebar.button('Consultar'):
                     try:
                         consulta = investpy.get_stock_historical_data(stock=stock_symbol,
-                                                                      country='china',
+                                                                      country='taiwan',
                                                                       from_date='01/01/2000',
                                                                       to_date=str('01/09/2022'))
                         df = pd.DataFrame(consulta)
